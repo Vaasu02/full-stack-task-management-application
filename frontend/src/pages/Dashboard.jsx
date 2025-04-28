@@ -12,6 +12,17 @@ const schema = yup.object().shape({
   status: yup.string().oneOf(['active', 'completed']).required('Status is required'),
 });
 
+const formatDate = (dateString) => {
+  const options = { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+  };
+  return new Date(dateString).toLocaleDateString('en-US', options);
+};
+
 const Dashboard = () => {
   const { tasks, loading, error, getTasks, createTask, updateTask, deleteTask, filters, setFilters } = useTask();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -170,27 +181,32 @@ const Dashboard = () => {
                 </div>
               </div>
               <p className="text-gray-600 mb-4">{task.description}</p>
-              <div className="flex justify-between items-center">
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    task.status === 'completed'
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-yellow-100 text-yellow-800'
-                  }`}
-                >
-                  {task.status}
-                </span>
-                <span
-                  className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    task.priority === 'high'
-                      ? 'bg-red-100 text-red-800'
-                      : task.priority === 'medium'
-                      ? 'bg-yellow-100 text-yellow-800'
-                      : 'bg-green-100 text-green-800'
-                  }`}
-                >
-                  {task.priority}
-                </span>
+              <div className="flex flex-col gap-2">
+                <div className="flex justify-between items-center">
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      task.status === 'completed'
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-yellow-100 text-yellow-800'
+                    }`}
+                  >
+                    {task.status}
+                  </span>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs font-medium ${
+                      task.priority === 'high'
+                        ? 'bg-red-100 text-red-800'
+                        : task.priority === 'medium'
+                        ? 'bg-yellow-100 text-yellow-800'
+                        : 'bg-green-100 text-green-800'
+                    }`}
+                  >
+                    {task.priority}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-500">
+                  Created: {formatDate(task.createdAt)}
+                </div>
               </div>
             </div>
           ))}
